@@ -129,9 +129,19 @@ def chatbot_response():
         print(f"Error in chatbot: {str(e)}")
         return jsonify({'success': False, 'error': str(e)}), 500
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
-    return "Hospital Finder API is running successfully 🚀"
+    return jsonify({
+        'message': 'Hospital Finder API is running successfully 🚀',
+        'status': 'online',
+        'endpoints': {
+            'health': '/health',
+            'find_hospitals': '/api/find-hospitals',
+            'emergency_hospitals': '/api/emergency-hospitals',
+            'hospital_details': '/api/hospital/<id>',
+            'chatbot': '/api/chatbot'
+        }
+    })
 
 @app.route('/health', methods=['GET'])
 def health_check():
