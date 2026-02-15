@@ -1,6 +1,6 @@
 // Main Application Logic
-// IMPORTANT: Replace this URL with your actual Render backend URL
-const API_BASE = 'https://pulse-slek.onrender.com';  // Your Render backend URL
+// Using relative path since frontend and backend are on same domain
+const API_BASE = '';  // Empty = same domain (Render)
 let currentHospitals = [];
 let userPosition = null;
 let sessionId = null;
