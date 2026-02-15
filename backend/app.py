@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
 from datetime import datetime
@@ -7,7 +7,7 @@ from symptom_analyzer import SymptomAnalyzer
 from hospital_service import HospitalService
 from chatbot import MedicalChatbot
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='')
 CORS(app)
 
 # Initialize services
@@ -17,6 +17,25 @@ chatbot = MedicalChatbot()
 
 # Session storage (in production, use Redis or database)
 sessions = {}
+
+# Serve Frontend
+@app.route('/')
+def serve_frontend():
+    """Serve the main HTML file"""
+    return send_from_directory('static', 'index.html')
+
+@app.route('/<path:path>')
+def serve_static_files(path):
+    """Serve static files (CSS, JS, images, etc.)"""
+    # Skip API routes
+    if path.startswith('api/'):
+        return jsonify({'error': 'Not found'}), 404
+    
+    if path and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory('static', path)
+    else:
+        # If file not found, serve index.html
+        return send_from_directory('static', 'index.html')
 
 @app.route('/api/find-hospitals', methods=['POST'])
 def find_hospitals():
